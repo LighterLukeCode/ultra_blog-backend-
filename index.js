@@ -2,13 +2,14 @@ import express from "express";
 import multer from "multer";
 import mongoose from "mongoose";
 import { createPostValidation, loginValidation, registerValidation } from "./validations.js";
-import { PostControllers, UserControllers } from "./controllers/index.js";
+import { CommentControllers, PostControllers, UserControllers } from "./controllers/index.js";
 import { checkAuth, handleValidationError } from "./utils/index.js";
 import cors from "cors";
 import fs from "fs";
 
+//process.env.MONGODB_URI
 mongoose
-  .connect(process.env.MONGODB_URI)
+  .connect("mongodb+srv://admin:wow123@cluster0.vs8tof3.mongodb.net/blog?retryWrites=true&w=majority")
   .then(() => console.log("DB ok"))
   .catch(err => console.log("DB error", err));
 
@@ -59,7 +60,11 @@ app.get("/posts/:id", PostControllers.getOnePost);
 app.delete("/posts/:id", checkAuth, PostControllers.removePost);
 app.patch("/posts/:id", checkAuth, createPostValidation, handleValidationError, PostControllers.update);
 
-app.listen(process.env.PORT || 4444, err => {
+/***********Comments*************** */
+// app.get("/comments", CommentsControllers.getAllComments);
+app.post("/comments", checkAuth, CommentControllers.create);
+//process.env.PORT ||
+app.listen(4444, err => {
   if (err) {
     return console.log(err);
   }
