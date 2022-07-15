@@ -79,7 +79,7 @@ export const getMe = async (req, res) => {
     const user = await UserModel.findById(req.userId);
 
     if (!user) {
-      res.status(404).json({
+      return res.status(404).json({
         message: "Пользователь не найден",
       });
     }
