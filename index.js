@@ -38,9 +38,9 @@ app.post("/upload", checkAuth, upload.single("image"), (req, res) => {
 
 /**********************User *****************/
 
-// павпв ап вап ва павпвg dfg df
-//  вапвап ва пва пваg dfg d
-//   авпва п вап ваg dfgdf
+// павпв ап вап ва павпвgg dfg dfg df gdf dfg df
+//  вапвап ва пва пваg fgd fgdfdfg d
+//   авпва п вап ваggfd gdf gd  dfgdf
 
 app.post("/auth/login", loginValidation, handleValidationError, UserControllers.login);
 app.post("/auth/register", registerValidation, handleValidationError, UserControllers.register);
