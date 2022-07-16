@@ -1,3 +1,4 @@
+import CommentModel from "../models/Comment.js";
 import PostModel from "../models/Post.js";
 
 export const getLastTags = async (req, res) => {
@@ -39,6 +40,7 @@ export const getOnePost = async (req, res) => {
       {
         $inc: { viewCount: 1 },
       },
+
       {
         returnDocument: "after",
       },
@@ -56,9 +58,7 @@ export const getOnePost = async (req, res) => {
         }
         res.json(doc);
       }
-    )
-      .populate("user")
-      .populate("comments");
+    ).populate("user");
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -138,4 +138,48 @@ export const create = async (req, res) => {
       message: "Не удалось создать пост",
     });
   }
+};
+
+export const createCom = async (req, res) => {
+  // find out which post you are commenting
+  const id = req.params.id;
+  // get the comment text and record post id
+  const comment = new CommentModel({
+    text: req.body.comment,
+    post: id,
+  });
+  // save comment
+  await comment.save();
+  // get this particular post
+  const postRelated = await PostModel.findById(id);
+  // push the comment into the post.comments array
+  postRelated.comments.push(comment);
+  // save and redirect...
+  await postRelated.save();
+
+  res.json(postRelated.comments);
+};
+
+export const createComm = (req, res) => {
+  const comment = {
+    text: req.body.text,
+    user: req.userId,
+  };
+  PostModel.findByIdAndUpdate(
+    req.body.postId,
+    {
+      $push: { comments: comment },
+    },
+    {
+      new: true,
+    }
+  )
+    .populate("user")
+    .exec((err, result) => {
+      if (err) {
+        return res.status(422).json({ error: err });
+      } else {
+        res.json(result);
+      }
+    });
 };

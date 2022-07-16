@@ -62,7 +62,7 @@ app.patch("/posts/:id", checkAuth, createPostValidation, handleValidationError, 
 
 /***********Comments*************** */
 // app.get("/comments", CommentsControllers.getAllComments);
-app.post("/comments", checkAuth, CommentControllers.create);
+app.post("/comment", PostControllers.createComm);
 //process.env.PORT ||
 app.listen(4444, err => {
   if (err) {
