@@ -1,5 +1,6 @@
 import CommentModel from "../models/Comment.js";
 import PostModel from "../models/Post.js";
+import UserModel from "../models/User.js";
 
 export const getLastTags = async (req, res) => {
   try {
@@ -40,7 +41,6 @@ export const getOnePost = async (req, res) => {
       {
         $inc: { viewCount: 1 },
       },
-
       {
         returnDocument: "after",
       },
@@ -58,7 +58,9 @@ export const getOnePost = async (req, res) => {
         }
         res.json(doc);
       }
-    ).populate("user");
+    )
+      .populate("user")
+      .populate("comments.user");
   } catch (err) {
     console.log(err);
     res.status(500).json({
@@ -175,6 +177,7 @@ export const createComm = (req, res) => {
     }
   )
     .populate("user")
+    .populate("comments.user")
     .exec((err, result) => {
       if (err) {
         return res.status(422).json({ error: err });
@@ -183,3 +186,23 @@ export const createComm = (req, res) => {
       }
     });
 };
+
+// export const createComm = async (req, res) => {
+//   const comment = { text: req.body.text };
+//   comment.user = req.userId;
+//   console.log(req.userId);
+
+//   let result = await PostModel.findByIdAndUpdate(
+//     req.body.postId,
+//     req.userId,
+//     {
+//       $push: { comments: comment },
+//     },
+//     {
+//       new: true,
+//     }
+//   )
+//     .populate("user")
+//     .exec();
+//   res.json(result);
+// };
