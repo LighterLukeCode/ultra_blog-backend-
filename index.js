@@ -9,7 +9,7 @@ import fs from "fs";
 
 //process.env.MONGODB_URI
 mongoose
-  .connect("mongodb+srv://admin:wow123@cluster0.vs8tof3.mongodb.net/blog?retryWrites=true&w=majority")
+  .connect(process.env.MONGODB_URI)
   .then(() => console.log("DB ok"))
   .catch(err => console.log("DB error", err));
 
@@ -67,7 +67,7 @@ app.patch("/posts/:id", checkAuth, createPostValidation, handleValidationError, 
 // app.get("/comments", CommentsControllers.getAllComments);
 app.post("/comment", checkAuth, PostControllers.createComm);
 //process.env.PORT ||
-app.listen(4444, err => {
+app.listen(process.env.PORT || 4444, err => {
   if (err) {
     return console.log(err);
   }
