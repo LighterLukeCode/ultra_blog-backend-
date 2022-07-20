@@ -56,6 +56,9 @@ app.post("/posts", checkAuth, createPostValidation, handleValidationError, PostC
 app.get("/posts", PostControllers.getAllPosts);
 app.get("/posts/tags", PostControllers.getLastTags);
 app.get("/tags", PostControllers.getLastTags);
+app.get("/posts/top", PostControllers.getSortedByViewsPosts);
+app.get("/posts/date", PostControllers.getSortedByDatePosts);
+app.get("/posts/tags/:tag", PostControllers.getTagPosts);
 app.get("/posts/:id", PostControllers.getOnePost);
 app.delete("/posts/:id", checkAuth, PostControllers.removePost);
 app.patch("/posts/:id", checkAuth, createPostValidation, handleValidationError, PostControllers.update);

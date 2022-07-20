@@ -20,7 +20,7 @@ export const getLastTags = async (req, res) => {
 
 export const getAllPosts = async (req, res) => {
   try {
-    const posts = await PostModel.find().populate("user").exec();
+    const posts = await PostModel.find().populate("user").populate("comments.user").exec();
     res.json(posts);
   } catch (err) {
     console.log(err);
@@ -29,6 +29,64 @@ export const getAllPosts = async (req, res) => {
     });
   }
 };
+
+export const getTagPosts = async (req, res) => {
+  try {
+    const tag = req.params.tag;
+    const posts = await PostModel.find({ tags: tag }).populate("user").populate("comments.user").exec();
+    res.json(posts);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Не удалось получить статьи",
+    });
+  }
+};
+
+export const getSortedByViewsPosts = async (req, res) => {
+  try {
+    const posts = await PostModel.find().sort({ viewCount: -1 }).populate("user").exec();
+    res.json(posts);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Не удалось получить статьи",
+    });
+  }
+};
+
+export const getSortedByDatePosts = async (req, res) => {
+  try {
+    const posts = await PostModel.find().sort({ createdAt: -1 }).populate("user").populate("comments.user").exec();
+    res.json(posts);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Не удалось получить статьи",
+    });
+  }
+};
+
+// export const getSortedByDatePosts = async (req, res) => {
+//   const posts = await PostModel.find()
+//     .populate("user")
+//     .populate("comments.user")
+//     .sort({ viewCount: -1 })
+//     .exec((err, doc) => {
+//       if (err) {
+//         console.log(err);
+//         return res.status(500).json({
+//           message: "Не удалось найти статью",
+//         });
+//       }
+//       if (!doc) {
+//         return res.status(404).json({
+//           message: "Не удалось найти статью, мяк",
+//         });
+//       }
+//       res.json(doc);
+//     });
+// };
 
 export const getOnePost = async (req, res) => {
   try {
