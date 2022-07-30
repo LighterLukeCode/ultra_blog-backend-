@@ -45,7 +45,7 @@ export const getTagPosts = async (req, res) => {
 
 export const getSortedByViewsPosts = async (req, res) => {
   try {
-    const posts = await PostModel.find().sort({ viewCount: -1 }).populate("user").exec();
+    const posts = await PostModel.find().sort({ viewCount: -1 }).populate("user").populate("comments.user").exec();
     res.json(posts);
   } catch (err) {
     console.log(err);
